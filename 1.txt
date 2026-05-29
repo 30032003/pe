@@ -1,0 +1,281 @@
+
+# Q1 Port Scanner
+
+### Create File
+
+```bash
+mkdir placement
+cd placement
+
+vim q1_port_scanner.py
+```
+
+### Paste Code
+
+```python
+import socket
+
+target = input("Enter Host/IP: ")
+
+for port in range(1,1025):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.settimeout(0.5)
+
+    result = s.connect_ex((target, port))
+
+    if result == 0:
+        try:
+            service = socket.getservbyport(port)
+        except:
+            service = "Unknown"
+
+        print(f"Port {port} open - Service: {service}")
+
+    s.close()
+```
+
+### Save
+
+```vim
+ESC
+:wq
+```
+
+### Run
+
+```bash
+python3 q1_port_scanner.py
+```
+
+### Example
+
+```text
+Enter Host/IP: scanme.nmap.org
+
+Port 22 open - Service: ssh
+Port 80 open - Service: http
+```
+
+---
+
+# Q2 Log Analyzer
+
+### Create Sample Log
+
+```bash
+vim sample.log
+```
+
+Paste:
+
+```text
+192.168.1.10 - - [24/May] "GET /index.html" 200
+192.168.1.11 - - [24/May] "GET /test.html" 404
+192.168.1.10 - - [24/May] "GET /abc.html" 404
+```
+
+Save:
+
+```vim
+:wq
+```
+
+### Create Program
+
+```bash
+vim q2_log_analyzer.py
+```
+
+```python
+from collections import Counter
+
+file = input("Enter log file: ")
+
+with open(file,"r") as f:
+    lines = f.readlines()
+
+total = len(lines)
+error404 = 0
+ips = []
+
+for line in lines:
+    parts = line.split()
+
+    ip = parts[0]
+    status = parts[-1]
+
+    ips.append(ip)
+
+    if status == "404":
+        error404 += 1
+
+print("Total Requests:", total)
+print("404 Errors:", error404)
+
+top = Counter(ips).most_common(3)
+
+for ip,count in top:
+    print(ip,count)
+```
+
+### Run
+
+```bash
+python3 q2_log_analyzer.py
+```
+
+---
+
+# Q3 Brute Force Detection
+
+### Create Log
+
+```bash
+vim auth.log
+```
+
+```text
+Failed password for root from 192.168.1.10
+Failed password for root from 192.168.1.10
+Failed password for root from 192.168.1.10
+Failed password for root from 192.168.1.10
+Failed password for root from 192.168.1.10
+Failed password for root from 192.168.1.10
+```
+
+### Program
+
+```bash
+vim q3_bruteforce.py
+```
+
+```python
+import re
+
+ip_attempts = {}
+
+with open("auth.log","r") as f:
+
+    for line in f:
+
+        if "Failed password" in line:
+
+            match = re.search(r'(\d+\.\d+\.\d+\.\d+)', line)
+
+            if match:
+                ip = match.group(1)
+
+                ip_attempts[ip] = ip_attempts.get(ip,0)+1
+
+for ip,count in ip_attempts.items():
+
+    if count > 5:
+        print("Suspicious IP:",ip)
+        print("Attempts:",count)
+```
+
+### Run
+
+```bash
+python3 q3_bruteforce.py
+```
+
+---
+
+# Q4 DNS Resolver
+
+### Create File
+
+```bash
+vim q4_dns.py
+```
+
+```python
+import socket
+
+domain = input("Enter Domain: ")
+
+ip = socket.gethostbyname(domain)
+
+print("IP Address:", ip)
+
+try:
+    host = socket.gethostbyaddr(ip)
+    print("Reverse DNS:", host[0])
+
+except:
+    print("Reverse DNS Not Available")
+```
+
+### Run
+
+```bash
+python3 q4_dns.py
+```
+
+### Example
+
+```text
+Enter Domain: google.com
+
+IP Address: 142.250.xx.xx
+Reverse DNS: bom07s...
+```
+
+---
+
+# Q5 Password Strength + SHA256
+
+### Create File
+
+```bash
+vim q5_password_hash.py
+```
+
+```python
+import hashlib
+import re
+
+password = input("Set Password: ")
+
+if len(password) < 8:
+    print("Weak Password")
+
+elif not re.search("[A-Z]", password):
+    print("Add Uppercase")
+
+elif not re.search("[a-z]", password):
+    print("Add Lowercase")
+
+elif not re.search("[0-9]", password):
+    print("Add Digit")
+
+else:
+
+    print("Strong Password")
+
+    stored_hash = hashlib.sha256(
+        password.encode()
+    ).hexdigest()
+
+    print("Hash:", stored_hash)
+
+    login = input("Enter Password: ")
+
+    login_hash = hashlib.sha256(
+        login.encode()
+    ).hexdigest()
+
+    if login_hash == stored_hash:
+        print("Login Success")
+
+    else:
+        print("Login Failed")
+```
+
+### Run
+
+```bash
+python3 q5_password_hash.py
+```
+

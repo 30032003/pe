@@ -1,0 +1,194 @@
+# Q6 File Integrity Checker (Basic Version)
+
+### Create File
+
+```bash
+vim q6_file_integrity.py
+```
+
+### Code
+
+```python
+import hashlib
+
+filename = input("Enter filename: ")
+
+with open(filename, "rb") as f:
+    data = f.read()
+
+hash_value = hashlib.sha256(data).hexdigest()
+
+print("SHA256 Hash:")
+print(hash_value)
+```
+
+### Run
+
+```bash
+python3 q6_file_integrity.py
+```
+
+---
+
+# Q7 Disk Usage Alert Script
+
+### Create File
+
+```bash
+vim q7_disk_alert.sh
+```
+
+### Code
+
+```bash
+#!/bin/bash
+
+THRESHOLD=80
+
+USAGE=$(df / | grep / | awk '{print $5}' | sed 's/%//')
+
+if [ $USAGE -gt $THRESHOLD ]
+then
+    echo "WARNING: Disk usage is $USAGE%" >> disk_alert.log
+    echo "Alert Logged"
+else
+    echo "Disk usage is safe: $USAGE%"
+fi
+```
+
+### Save and Give Permission
+
+```bash
+chmod +x q7_disk_alert.sh
+```
+
+### Run
+
+```bash
+./q7_disk_alert.sh
+```
+
+---
+
+# Q8 Service Health Monitor
+
+### Create File
+
+```bash
+vim q8_service_monitor.sh
+```
+
+### Code
+
+```bash
+#!/bin/bash
+
+services=("ssh" "nginx")
+
+for service in "${services[@]}"
+do
+    systemctl is-active --quiet $service
+
+    if [ $? -eq 0 ]
+    then
+        echo "$service is running"
+    else
+        echo "$service stopped"
+        sudo systemctl restart $service
+        echo "$service restarted"
+    fi
+done
+```
+
+### Permission
+
+```bash
+chmod +x q8_service_monitor.sh
+```
+
+### Run
+
+```bash
+./q8_service_monitor.sh
+```
+
+---
+
+# Q9 Failed Login Alert
+
+### Create File
+
+```bash
+vim q9_failed_login.sh
+```
+
+### Code
+
+```bash
+#!/bin/bash
+
+echo "Last 10 Failed Login Attempts"
+
+grep "Failed password" /var/log/auth.log | tail -10
+```
+
+### Permission
+
+```bash
+chmod +x q9_failed_login.sh
+```
+
+### Run
+
+```bash
+./q9_failed_login.sh
+```
+
+---
+
+# Q10 Cron Job Verifier
+
+### Create File
+
+```bash
+vim q10_cron_verifier.sh
+```
+
+### Code
+
+```bash
+#!/bin/bash
+
+echo "Current Cron Jobs"
+
+crontab -l
+
+echo
+read -p "Enter job keyword: " job
+
+crontab -l | grep "$job"
+
+if [ $? -eq 0 ]
+then
+    echo "Job Found"
+else
+    echo "Job Not Found"
+fi
+```
+
+### Permission
+
+```bash
+chmod +x q10_cron_verifier.sh
+```
+
+### Run
+
+```bash
+./q10_cron_verifier.sh
+```
+
+---
+
+
+

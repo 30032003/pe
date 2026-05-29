@@ -1,0 +1,24 @@
+# One-Line Revision Before Exam
+
+| Q   | Concept                   |
+| --- | ------------------------- |
+| Q1  | Port Scanner              |
+| Q2  | Log Analysis              |
+| Q3  | Brute Force Detection     |
+| Q4  | DNS Resolution            |
+| Q5  | SHA-256 Password Hashing  |
+| Q6  | File Hashing              |
+| Q7  | Disk Usage Monitoring     |
+| Q8  | Service Monitoring        |
+| Q9  | Failed Login Detection    |
+| Q10 | Cron Verification         |
+| Q11 | File Integrity Monitoring |
+| Q12 | Network Information       |
+| Q13 | Interface Analyzer        |
+| Q14 | MAC/IP Finder             |
+| Q15 | Caesar Encryption         |
+| Q16 | URL Monitoring            |
+| Q17 | Email/IP/URL Extraction   |
+| Q18 | Ping Sweep                |
+| Q19 | Process-Port Mapping      |
+| Q20 | Automated Backup          |

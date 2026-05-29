@@ -1,0 +1,237 @@
+# Q11 File Integrity Checker (Advanced)
+
+### Create File
+
+```bash
+vim q11_file_integrity.py
+```
+
+### Code
+
+```python
+import os
+import json
+import hashlib
+
+HASH_FILE = "hashes.json"
+
+def get_hash(filepath):
+    with open(filepath, "rb") as f:
+        return hashlib.sha256(f.read()).hexdigest()
+
+directory = input("Enter Directory: ")
+
+current = {}
+
+for file in os.listdir(directory):
+    path = os.path.join(directory, file)
+
+    if os.path.isfile(path):
+        current[file] = get_hash(path)
+
+if not os.path.exists(HASH_FILE):
+
+    with open(HASH_FILE, "w") as f:
+        json.dump(current, f, indent=4)
+
+    print("Baseline Created")
+
+else:
+
+    with open(HASH_FILE, "r") as f:
+        old = json.load(f)
+
+    for file in current:
+
+        if file not in old:
+            print("New File:", file)
+
+        elif current[file] != old[file]:
+            print("Modified:", file)
+
+    for file in old:
+
+        if file not in current:
+            print("Deleted:", file)
+
+    with open(HASH_FILE, "w") as f:
+        json.dump(current, f, indent=4)
+```
+
+### Run
+
+```bash
+python3 q11_file_integrity.py
+```
+
+---
+
+# Q12 Network Interface Analyzer
+
+### Install Package
+
+```bash
+pip3 install psutil
+```
+
+### Create File
+
+```bash
+vim q12_network_info.py
+```
+
+### Code
+
+```python
+import psutil
+
+interfaces = psutil.net_if_addrs()
+
+for interface, addresses in interfaces.items():
+
+    print("\nInterface:", interface)
+
+    for addr in addresses:
+
+        print(addr.address)
+```
+
+### Run
+
+```bash
+python3 q12_network_info.py
+```
+
+---
+
+# Q13 Network Interface Analyzer (Detailed)
+
+### Create File
+
+```bash
+vim q13_interface_analyzer.py
+```
+
+### Code
+
+```python
+import psutil
+
+stats = psutil.net_if_stats()
+addrs = psutil.net_if_addrs()
+
+for iface in addrs:
+
+    print("\nInterface:", iface)
+
+    for addr in addrs[iface]:
+
+        print("Address:", addr.address)
+
+    print("Status:", "UP" if stats[iface].isup else "DOWN")
+```
+
+### Run
+
+```bash
+python3 q13_interface_analyzer.py
+```
+
+---
+
+# Q14 MAC + IP Address Finder
+
+### Create File
+
+```bash
+vim q14_mac_ip.py
+```
+
+### Code
+
+```python
+import socket
+import uuid
+
+hostname = socket.gethostname()
+
+ip = socket.gethostbyname(hostname)
+
+mac = ':'.join(('%012X' % uuid.getnode())[i:i+2]
+               for i in range(0, 12, 2))
+
+print("Hostname:", hostname)
+print("IP:", ip)
+print("MAC:", mac)
+```
+
+### Run
+
+```bash
+python3 q14_mac_ip.py
+```
+
+---
+
+# Q15 Simple Encryption Tool (Caesar Cipher)
+
+### Create File
+
+```bash
+vim q15_encrypt.py
+```
+
+### Code
+
+```python
+def encrypt(text, shift):
+
+    result = ""
+
+    for char in text:
+
+        if char.isalpha():
+
+            start = ord('A') if char.isupper() else ord('a')
+
+            result += chr(
+                (ord(char) - start + shift) % 26 + start
+            )
+
+        else:
+            result += char
+
+    return result
+
+def decrypt(text, shift):
+    return encrypt(text, -shift)
+
+msg = input("Enter Message: ")
+
+enc = encrypt(msg, 3)
+
+print("Encrypted:", enc)
+
+dec = decrypt(enc, 3)
+
+print("Decrypted:", dec)
+```
+
+### Run
+
+```bash
+python3 q15_encrypt.py
+```
+
+### Example Output
+
+```text
+Enter Message: hello
+
+Encrypted: khoor
+Decrypted: hello
+```
+
+---
+
+

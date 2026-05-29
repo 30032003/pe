@@ -1,0 +1,237 @@
+# Q16 URL Status Checker
+
+### Install Package
+
+```bash
+pip3 install requests
+```
+
+### Create File
+
+```bash
+vim q16_url_checker.py
+```
+
+### Code
+
+```python
+import requests
+import time
+
+urls = input("Enter URLs separated by comma: ").split(",")
+
+for url in urls:
+
+    url = url.strip()
+
+    try:
+        start = time.time()
+
+        response = requests.get(url)
+
+        end = time.time()
+
+        print("\nURL:", url)
+        print("Status Code:", response.status_code)
+        print("Response Time:", round(end-start, 3), "seconds")
+
+    except Exception as e:
+        print("Error:", e)
+```
+
+### Run
+
+```bash
+python3 q16_url_checker.py
+```
+
+---
+
+# Q17 Advanced Email + IP Extractor
+
+### Create Sample File
+
+```bash
+vim sample.txt
+```
+
+```text
+Contact: abc@gmail.com
+
+Server IP: 192.168.1.10
+
+Website: https://google.com
+```
+
+### Create Program
+
+```bash
+vim q17_extractor.py
+```
+
+### Code
+
+```python
+import re
+
+with open("sample.txt","r") as f:
+    data = f.read()
+
+emails = re.findall(
+    r'[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}',
+    data
+)
+
+ips = re.findall(
+    r'\d+\.\d+\.\d+\.\d+',
+    data
+)
+
+urls = re.findall(
+    r'https?://\S+',
+    data
+)
+
+print("Emails:")
+print(emails)
+
+print("\nIPs:")
+print(ips)
+
+print("\nURLs:")
+print(urls)
+```
+
+### Run
+
+```bash
+python3 q17_extractor.py
+```
+
+---
+
+# Q18 Ping Sweep Tool
+
+### Create File
+
+```bash
+vim q18_ping_sweep.py
+```
+
+### Code
+
+```python
+import os
+
+subnet = input("Enter subnet (192.168.1): ")
+
+for i in range(1,255):
+
+    ip = subnet + "." + str(i)
+
+    response = os.system(
+        "ping -c 1 -W 1 " + ip + " > /dev/null 2>&1"
+    )
+
+    if response == 0:
+        print("Host Alive:", ip)
+```
+
+### Run
+
+```bash
+python3 q18_ping_sweep.py
+```
+
+### Example
+
+```text
+Enter subnet (192.168.1): 192.168.1
+
+Host Alive: 192.168.1.1
+Host Alive: 192.168.1.5
+Host Alive: 192.168.1.10
+```
+
+---
+
+# Q19 Process + Port Mapping
+
+### Create File
+
+```bash
+vim q19_process_port.sh
+```
+
+### Code
+
+```bash
+#!/bin/bash
+
+echo "Process - PID - Port"
+
+sudo netstat -tulpn
+```
+
+### Permission
+
+```bash
+chmod +x q19_process_port.sh
+```
+
+### Run
+
+```bash
+./q19_process_port.sh
+```
+
+### Alternative Command
+
+```bash
+sudo ss -tulpn
+```
+
+---
+
+# Q20 Automated Backup Script
+
+### Create File
+
+```bash
+vim q20_backup.sh
+```
+
+### Code
+
+```bash
+#!/bin/bash
+
+SOURCE=$1
+BACKUP_DIR=backup
+
+mkdir -p $BACKUP_DIR
+
+FILE=$BACKUP_DIR/backup_$(date +%Y%m%d_%H%M%S).tar.gz
+
+tar -czf $FILE $SOURCE
+
+echo "Backup Created: $FILE"
+
+ls -t $BACKUP_DIR/*.tar.gz | tail -n +6 | xargs rm -f
+```
+
+### Permission
+
+```bash
+chmod +x q20_backup.sh
+```
+
+### Run
+
+```bash
+./q20_backup.sh myfolder
+```
+
+---
+
+
